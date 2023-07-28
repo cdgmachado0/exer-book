@@ -5,29 +5,11 @@ pub fn convert_word(word: &mut String) {
         'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',    
     ];
     let vowels = ['a', 'e', 'i', 'o', 'u',];
-
-    // let new_word = 'outter: for c in word.chars() {
-    //     for letter in vowels {
-    //         if c == letter {
-    //             break 'outter word + '-' + "hay";
-    //         }
-    //     }
-    // };
     
-
     let mut c = word.chars();
     let mut mod_word = String::new();
 
     if let Some(l) = c.next() {
-        // for vowel in vowels {
-        //     match word.chars().position(|_| l == vowel) {
-        //         Some(_) => {
-        //             is_vowel = true;
-        //             break;
-        //         },
-        //         None => continue,
-        //     }
-        // }
         let is_vowel = check_letter(&vowels, &l, &word);
         if is_vowel {
             mod_word = format!("{}-hay", &word);
@@ -35,6 +17,7 @@ pub fn convert_word(word: &mut String) {
             let first_l = word.remove(0);
             mod_word = format!("{}-{}ay", word, first_l);
         }
+        print!("modified word: {}\n", mod_word);
     };
 
     fn check_letter(letters: &[char], l: &char, word: &String) -> bool {
@@ -52,10 +35,4 @@ pub fn convert_word(word: &mut String) {
 
         exist
     }
-
-    
-
-    // println!("{:?}", c.next());
-
-
 }

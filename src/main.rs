@@ -12,7 +12,10 @@ fn main() {
     let mut list = vec![6, 5, 5, 5, 6, 9, 6, 6, 8, 5];
     get_median(&mut list);
     get_mode(&mut list);
-    convert_word("hello".to_string());
+
+    let my_str = "first";
+    let mut to_pass = String::from(my_str);
+    convert_word(&mut to_pass);
 }
 
 
