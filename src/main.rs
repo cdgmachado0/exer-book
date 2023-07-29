@@ -13,9 +13,7 @@ fn main() {
     get_median(&mut list);
     get_mode(&mut list);
 
-    let my_str = "first";
-    let mut to_pass = String::from(my_str);
-    convert_word(&mut to_pass);
+    convert_word("房子");
 }
 
 
