@@ -1,9 +1,5 @@
 
 pub fn convert_word(my_str: &str) {
-    let consonants = [
-        'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 
-        'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',    
-    ];
     let vowels = ['a', 'e', 'i', 'o', 'u',];
 
     let mut word = String::from(my_str);
