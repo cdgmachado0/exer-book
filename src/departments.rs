@@ -78,7 +78,7 @@ fn edit_employee(
 ) {
     match add_or_remove {
         Action::Add => {
-            let msg = format!("Success! {} added to {}", &name, &department);
+            let msg = format!("^^ Success! {} added to {} ^^", c(&name), c(&department));
             company_record
                 .entry(name)
                 .or_insert(department);
@@ -86,7 +86,7 @@ fn edit_employee(
         },
         Action::Remove => {
             company_record.remove(&name);
-            println!("Success! {} removed from {}", &name, &department);
+            println!("^^ Success! {} removed from {} ^^", c(&name), c(&department));
         },
     }
 }
@@ -96,6 +96,12 @@ fn show_employes(company_record: &HashMap<String, String>) {
         println!("hi");
         println!("{} - {}", employee, department);
     }
+}
+
+fn c(entry: &String) -> String {
+    let mut entry_chars = entry.chars();
+    let l = entry_chars.next().unwrap();
+    format!("{}{}", l.to_uppercase(), &entry[1..])
 }
 
 enum Action {
