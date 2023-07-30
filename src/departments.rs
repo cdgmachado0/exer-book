@@ -47,7 +47,11 @@ pub fn add_department() {
 
                         for dep in departments {
                             if dep == possible_dep {
-                                edit_employee(name, dep, &mut company_record, Action::Add);
+                                edit_employee(
+                                    name.to_string(), 
+                                    dep.to_string(), 
+                                    &mut company_record, Action::Add
+                                );
                             }
                         }
                     }
@@ -64,16 +68,16 @@ pub fn add_department() {
 
 
 fn edit_employee(
-    name: &str, 
-    department: &str, 
+    name: String, 
+    department: String, 
     company_record: &mut HashMap<String, String>,
     add_or_remove: Action
 ) {
     match add_or_remove {
         Action::Add => {
             company_record
-                .entry(name.to_string())
-                .or_insert(department.to_string());
+                .entry(name)
+                .or_insert(department);
             println!("Success! {name} added to {department}");
         },
         Action::Remove => {
