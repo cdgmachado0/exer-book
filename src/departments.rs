@@ -42,19 +42,16 @@ pub fn add_department() {
 
                 for employee in employees { 
                     if name == employee {
-                        // let no_second_space = &no_first_space[second_space_i ..];
                         let possible_dep = user_input.rfind(' ').unwrap();
                         let possible_dep = user_input[possible_dep + 1..].trim();
 
-
                         for dep in departments {
                             if dep == possible_dep {
-                                edit_employee(name, dep, &mut company_record, true);
+                                edit_employee(name, dep, &mut company_record, Action::Add);
                             }
                         }
                     }
                 };
-
             }
 
             if i == 6 && c == ' ' {
@@ -70,15 +67,18 @@ fn edit_employee(
     name: &str, 
     department: &str, 
     company_record: &mut HashMap<String, String>,
-    add_or_remove: bool
+    add_or_remove: Action
 ) {
-    if add_or_remove {
-        company_record
-            .entry(name.to_string())
-            .or_insert(department.to_string());
-        println!("Success! {name} added to {department}");
-    } else {
-        //remove
+    match add_or_remove {
+        Action::Add => {
+            company_record
+                .entry(name.to_string())
+                .or_insert(department.to_string());
+            println!("Success! {name} added to {department}");
+        },
+        Action::Remove => {
+            //code
+        },
     }
 }
 
@@ -87,5 +87,10 @@ fn show_employes(company_record: &HashMap<String, String>) {
         println!("hi");
         println!("{} - {}", employee, department);
     }
+}
+
+enum Action {
+    Add,
+    Remove
 }
 
