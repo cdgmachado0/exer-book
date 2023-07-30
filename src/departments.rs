@@ -10,7 +10,7 @@ pub fn add_department() {
     
     loop {
         let mut user_input = String::new();
-        println!("Please insert an action");
+        println!("Please insert an action: [ACTION] [EMPLOYEE] to/from [DEPARTMENT]");
 
         if let Err(_) = io::stdin().read_line(&mut user_input) {
             println!("error happened");
@@ -19,9 +19,27 @@ pub fn add_department() {
 
         user_input = user_input.trim().to_lowercase();
 
-        if user_input == "list" {
-            show_employes(&company_record);
-            continue;
+        if user_input.starts_with("list") {
+            let display = Action::Display(String::from("all"), String::from("dep"));
+
+            if user_input.find(' ') == user_input.rfind(' ') {
+                let space_i = user_input.find(' ').unwrap();
+                let display_action = &user_input[space_i + 1..];
+
+                match display {
+                    Action::Display(all, dep) => {
+                        if display_action == all && display_action == dep {
+                            show_employes(&company_record, display_action);
+                        } else {
+                            //error in display task
+                        }
+                    },
+                    _ => ()
+                }
+                continue;
+            } else {
+                //error in task provided
+            }
         }
 
         if !user_input.starts_with("add")  {
@@ -88,13 +106,17 @@ fn edit_employee(
             company_record.remove(&name);
             println!("^^ Success! {} removed from {} ^^", c(&name), c(&department));
         },
+        _ => (),
     }
 }
 
-fn show_employes(company_record: &HashMap<String, String>) {
+fn show_employes(company_record: &HashMap<String, String>, action: &str) {
+    let mut for_sorting: Vec<&String> = Vec::new();
+
     for (employee, department) in company_record {
-        println!("hi");
-        println!("{} - {}", employee, department);
+        if action == "all" {
+            for_sorting.push(employee);
+        }
     }
 }
 
@@ -106,6 +128,9 @@ fn c(entry: &String) -> String {
 
 enum Action {
     Add,
-    Remove
+    Remove,
+    Display(String, String),
 }
+
+
 
