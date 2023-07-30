@@ -8,9 +8,9 @@ pub fn add_department() {
     let employees = ["alice", "bob", "sally", "john"];
     let mut company_record: HashMap<String, String> = HashMap::new();
 
-    let mut user_input = String::new();
-
+    
     loop {
+        let mut user_input = String::new();
         println!("Please insert an action");
 
         if let Err(_) = io::stdin().read_line(&mut user_input) {
@@ -18,7 +18,7 @@ pub fn add_department() {
             return;
         };
 
-        user_input = user_input.to_lowercase();
+        user_input = user_input.trim().to_lowercase();
 
         if user_input == "list" {
             show_employes(&company_record);
@@ -84,6 +84,7 @@ fn edit_employee(
 
 fn show_employes(company_record: &HashMap<String, String>) {
     for (employee, department) in company_record {
+        println!("hi");
         println!("{} - {}", employee, department);
     }
 }
