@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
+use std::hash::Hash;
 use std::io;
 
 
@@ -50,7 +51,8 @@ pub fn add_department() {
                                 edit_employee(
                                     name.to_string(), 
                                     dep.to_string(), 
-                                    &mut company_record, Action::Add
+                                    &mut company_record, 
+                                    Action::Add
                                 );
                             }
                         }
@@ -91,6 +93,46 @@ fn show_employes(company_record: &HashMap<String, String>) {
         println!("hi");
         println!("{} - {}", employee, department);
     }
+}
+
+fn triage_action(
+    i: u8, 
+    c: char, 
+    user_input: &String, 
+    add_or_remove: Action,
+    employees: &[&str],
+    departments: &[&str],
+    company_record: &mut HashMap<String, String>,
+) {
+    let index = match add_or_remove {
+        Action::Add => 3,
+        Action::Remove => 6,
+    };
+
+    if i == index && c == ' ' {
+        let no_first_space = user_input[index + 1..];
+        let second_space_i = no_first_space.find(' ').unwrap();
+        let name = &no_first_space[..second_space_i];
+
+        for employee in employees { 
+            if name == employee {
+                let possible_dep = user_input.rfind(' ').unwrap();
+                let possible_dep = user_input[possible_dep + 1..].trim();
+
+                for dep in departments {
+                    if dep == &possible_dep {
+                        edit_employee(
+                            name.to_string(), 
+                            dep.to_string(), 
+                            &mut company_record, 
+                            add_or_remove
+                        );
+                    }
+                }
+            }
+        };
+    }
+
 }
 
 enum Action {
