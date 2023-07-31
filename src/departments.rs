@@ -22,12 +22,14 @@ pub fn add_department() {
         if user_input.starts_with("list") {
             let display = Action::Display(String::from("all"), String::from("dep"));
 
-            let spaces = user_input.chars().filter(|c| c.is_whitespace()).count(); //counting the whitespaces for `list dep [DEPARTMENT]`
-            let space_i = user_input.find(' ').unwrap();
-            let rest_string = &user_input[space_i + 1..];
+            // let spaces = user_input.chars().filter(|c| c.is_whitespace()).count(); //counting the whitespaces for `list dep [DEPARTMENT]`
+            // let space_i = user_input.find(' ').unwrap();
+            // let rest_string = &user_input[space_i + 1..];
+
+            let (rest_string, spaces) = filter_whitespaces(&user_input);
 
             if spaces == 1 && rest_string == "all" {
-                let space_i = user_input.find(' ').unwrap();
+                // let space_i = user_input.find(' ').unwrap();
 
                 match display {
                     Action::Display(all, _) => {
@@ -136,20 +138,19 @@ fn c(entry: &String) -> String {
     format!("{}{}", l.to_uppercase(), &entry[1..])
 }
 
-fn filter_whitespaces(input: &String) -> &str {
-    let spaces = input.chars().filter(|c| c.is_whitespace()).count(); //counting the whitespaces for `list dep [DEPARTMENT]`
-    let space_i = input.find(' ').unwrap();
-    let rest_string = &input[space_i + 1..];
-
+fn filter_whitespaces(input: &String) -> (&str, usize) {
     let spaces = input.chars().filter(|c| c.is_whitespace()).count();
     let mut i = 0;
-    while i < spaces {
-        let space_i = input.find(' ').unwrap();
-        let rest_string = &input[space_i + 1..];
-        i += 1;
-    }
+    let mut mut_input: &str = input;
 
-    unimplemented!();
+    loop {
+        let space_i = mut_input.find(' ').unwrap();
+        mut_input = &mut_input[space_i + 1..];
+        i += 1;
+        if i == spaces {
+            return (mut_input, spaces);
+        }
+    };
 }
 
 enum Action {
