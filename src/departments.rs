@@ -29,7 +29,7 @@ pub fn add_department() {
                 match display {
                     Action::Display(all, _) => {
                         if action_or_dep == all {
-                            show_employes(&company_record, action_or_dep);
+                            show_employes(&mut company_record, action_or_dep);
                         } else {
                             //error in display task
                         }
@@ -38,8 +38,7 @@ pub fn add_department() {
                 }
                 continue;
             } else if spaces == 2 && DEPARTMENTS.contains(&action_or_dep) {
-                //for dep [DEPARTMENT]
-                
+                show_employes(&mut company_record, action_or_dep);
             } else {
                 //error in task provided
             }
@@ -123,16 +122,8 @@ fn edit_employee(
     }
 }
 
-fn show_employes(company_record: &HashMap<String, Vec<String>>, action_or_dep: &str) {
-
-    // for (department, employees) in company_record {
-    //     // if action == "all" {
-    //     //     for_sorting.push(employee);
-    //     // }
-
-
-    // }
-
+fn show_employes(company_record: &mut HashMap<String, Vec<String>>, action_or_dep: &str) 
+{
     if action_or_dep == "all" {
         let mut sorted_dep: Vec<&str> = DEPARTMENTS.to_vec();
         sorted_dep.sort(); 
@@ -149,18 +140,14 @@ fn show_employes(company_record: &HashMap<String, Vec<String>>, action_or_dep: &
                 println!("{employee}");
             }
         }
-
+    } else {
+        println!("{} Department:", c(&action_or_dep.to_string()));
+        let employees = company_record.get_mut(action_or_dep).unwrap();
+        employees.sort();
+        for employee in employees {
+            println!("{employee}");
+        }
     }
-
-    // for dep in DEPARTMENTS.sort() {
-    //     company_record.get(dep);
-    // }
-
-    
-    // println!("Employees:");
-    // for element in for_sorting {
-    //     println!("{}", element);
-    // }
 }
 
 fn c(entry: &String) -> String {
