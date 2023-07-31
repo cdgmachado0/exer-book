@@ -123,8 +123,7 @@ fn edit_employee(
     }
 }
 
-fn show_employes(company_record: &HashMap<String, Vec<String>>, action: &str) {
-    let mut for_sorting: Vec<&String> = Vec::new();
+fn show_employes(company_record: &HashMap<String, Vec<String>>, action_or_dep: &str) {
 
     // for (department, employees) in company_record {
     //     // if action == "all" {
@@ -134,8 +133,24 @@ fn show_employes(company_record: &HashMap<String, Vec<String>>, action: &str) {
 
     // }
 
-    let x = DEPARTMENTS.sort(); //implementing this func - get the vec using the departmets const as key but has to sort first 
-    println!("x: {:?}", x);
+    if action_or_dep == "all" {
+        let mut sorted_dep: Vec<&str> = DEPARTMENTS.to_vec();
+        sorted_dep.sort(); 
+
+        for dep in sorted_dep {
+            let employees = company_record.get(dep);
+            if employees == None { 
+                continue; 
+            }
+
+            let employees = employees.unwrap();
+            println!("{}:", c(&dep.to_string()));
+            for employee in employees { 
+                println!("{employee}");
+            }
+        }
+
+    }
 
     // for dep in DEPARTMENTS.sort() {
     //     company_record.get(dep);
