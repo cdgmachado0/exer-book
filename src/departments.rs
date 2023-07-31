@@ -1,11 +1,13 @@
 use std::collections::HashMap;
 use std::io;
 
+const DEPARTMENTS: [&str; 4] = ["sales", "operations", "engineering", "support"];
+const EMPLOYEES: [&str; 4] = ["alice", "bob", "sally", "john"];
 
 pub fn add_department() {
-    let departments = ["sales", "operations", "engineering", "support"];
-    let employees = ["alice", "bob", "sally", "john"];
-    let mut company_record: HashMap<String, String> = HashMap::new();
+    // let departments = ["sales", "operations", "engineering", "support"];
+    // let employees = ["alice", "bob", "sally", "john"];
+    let mut company_record: HashMap<String, Vec<String>> = HashMap::new();
 
     
     loop {
@@ -35,7 +37,7 @@ pub fn add_department() {
                     _ => ()
                 }
                 continue;
-            } else if spaces == 2 && departments.contains(&action_or_dep) {
+            } else if spaces == 2 && DEPARTMENTS.contains(&action_or_dep) {
                 //for dep [DEPARTMENT]
                 
             } else {
@@ -66,12 +68,12 @@ pub fn add_department() {
                 let second_space_i = no_first_space.find(' ').unwrap();
                 let name = &no_first_space[..second_space_i];
 
-                for employee in employees { 
+                for employee in EMPLOYEES { 
                     if name == employee {
                         let possible_dep = user_input.rfind(' ').unwrap();
                         let possible_dep = user_input[possible_dep + 1..].trim();
 
-                        for dep in departments {
+                        for dep in DEPARTMENTS {
                             if dep == possible_dep {
                                 edit_employee(
                                     name.to_string(), 
@@ -92,15 +94,25 @@ pub fn add_department() {
 fn edit_employee(
     name: String, 
     department: String, 
-    company_record: &mut HashMap<String, String>,
+    company_record: &mut HashMap<String, Vec<String>>,
     add_or_remove: &Action
 ) {
     match add_or_remove {
         Action::Add => {
             let msg = format!("^^ Success! {} added to {} ^^", c(&name), c(&department));
+
             company_record
-                .entry(name)
-                .or_insert(department);
+                .entry(department)
+                .and_modify(|e| {
+                    if e.contains(&name) {
+                        println!("Employee is already in this department");
+                        return;
+                    } else {
+                        e.push(name.clone());
+                    }
+                })
+                .or_insert(vec![name]);
+
             println!("{msg}");
         },
         Action::Remove => {
@@ -111,20 +123,29 @@ fn edit_employee(
     }
 }
 
-fn show_employes(company_record: &HashMap<String, String>, action: &str) {
+fn show_employes(company_record: &HashMap<String, Vec<String>>, action: &str) {
     let mut for_sorting: Vec<&String> = Vec::new();
 
-    for (employee, department) in company_record {
-        if action == "all" {
-            for_sorting.push(employee);
-        }
-    }
+    // for (department, employees) in company_record {
+    //     // if action == "all" {
+    //     //     for_sorting.push(employee);
+    //     // }
+
+
+    // }
+
+    let x = DEPARTMENTS.sort(); //implementing this func - get the vec using the departmets const as key but has to sort first 
+    println!("x: {:?}", x);
+
+    // for dep in DEPARTMENTS.sort() {
+    //     company_record.get(dep);
+    // }
 
     
-    println!("Employees:");
-    for element in for_sorting {
-        println!("{}", element);
-    }
+    // println!("Employees:");
+    // for element in for_sorting {
+    //     println!("{}", element);
+    // }
 }
 
 fn c(entry: &String) -> String {
