@@ -21,20 +21,13 @@ pub fn add_department() {
 
         if user_input.starts_with("list") {
             let display = Action::Display(String::from("all"), String::from("dep"));
+            let (action_or_dep, spaces) = filter_whitespaces(&user_input);
 
-            // let spaces = user_input.chars().filter(|c| c.is_whitespace()).count(); //counting the whitespaces for `list dep [DEPARTMENT]`
-            // let space_i = user_input.find(' ').unwrap();
-            // let rest_string = &user_input[space_i + 1..];
-
-            let (rest_string, spaces) = filter_whitespaces(&user_input);
-
-            if spaces == 1 && rest_string == "all" {
-                // let space_i = user_input.find(' ').unwrap();
-
+            if spaces == 1 && action_or_dep == "all" {
                 match display {
                     Action::Display(all, _) => {
-                        if rest_string == all {
-                            show_employes(&company_record, rest_string);
+                        if action_or_dep == all {
+                            show_employes(&company_record, action_or_dep);
                         } else {
                             //error in display task
                         }
@@ -42,8 +35,9 @@ pub fn add_department() {
                     _ => ()
                 }
                 continue;
-            } else if spaces == 2 {
+            } else if spaces == 2 && departments.contains(&action_or_dep) {
                 //for dep [DEPARTMENT]
+                
             } else {
                 //error in task provided
             }
@@ -125,6 +119,7 @@ fn show_employes(company_record: &HashMap<String, String>, action: &str) {
             for_sorting.push(employee);
         }
     }
+
     
     println!("Employees:");
     for element in for_sorting {
