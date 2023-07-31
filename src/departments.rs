@@ -22,14 +22,17 @@ pub fn add_department() {
         if user_input.starts_with("list") {
             let display = Action::Display(String::from("all"), String::from("dep"));
 
-            if user_input.find(' ') == user_input.rfind(' ') {
+            let spaces = user_input.chars().filter(|c| c.is_whitespace()).count(); //counting the whitespaces for `list dep [DEPARTMENT]`
+            let space_i = user_input.find(' ').unwrap();
+            let rest_string = &user_input[space_i + 1..];
+
+            if spaces == 1 && rest_string == "all" {
                 let space_i = user_input.find(' ').unwrap();
-                let display_action = &user_input[space_i + 1..];
 
                 match display {
-                    Action::Display(all, dep) => {
-                        if display_action == all && display_action == dep {
-                            show_employes(&company_record, display_action);
+                    Action::Display(all, _) => {
+                        if rest_string == all {
+                            show_employes(&company_record, rest_string);
                         } else {
                             //error in display task
                         }
@@ -37,6 +40,8 @@ pub fn add_department() {
                     _ => ()
                 }
                 continue;
+            } else if spaces == 2 {
+                //for dep [DEPARTMENT]
             } else {
                 //error in task provided
             }
@@ -117,6 +122,11 @@ fn show_employes(company_record: &HashMap<String, String>, action: &str) {
         if action == "all" {
             for_sorting.push(employee);
         }
+    }
+    
+    println!("Employees:");
+    for element in for_sorting {
+        println!("{}", element);
     }
 }
 
