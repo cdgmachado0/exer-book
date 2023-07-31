@@ -136,6 +136,22 @@ fn c(entry: &String) -> String {
     format!("{}{}", l.to_uppercase(), &entry[1..])
 }
 
+fn filter_whitespaces(input: &String) -> &str {
+    let spaces = input.chars().filter(|c| c.is_whitespace()).count(); //counting the whitespaces for `list dep [DEPARTMENT]`
+    let space_i = input.find(' ').unwrap();
+    let rest_string = &input[space_i + 1..];
+
+    let spaces = input.chars().filter(|c| c.is_whitespace()).count();
+    let mut i = 0;
+    while i < spaces {
+        let space_i = input.find(' ').unwrap();
+        let rest_string = &input[space_i + 1..];
+        i += 1;
+    }
+
+    unimplemented!();
+}
+
 enum Action {
     Add,
     Remove,
