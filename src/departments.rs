@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::io;
 
-const DEPARTMENTS: [&str; 4] = ["sales", "operations", "engineering", "support"];
-const EMPLOYEES: [&str; 4] = ["alice", "bob", "sally", "john"];
+const DEPARTMENTS: [&str; 5] = ["sales", "marketing", "engineering", "support", "management"];
+const EMPLOYEES: [&str; 6] = ["alice", "bob", "alena", "john", "carlos", "natali"];
 
 pub fn add_department() {
     let mut company_record: HashMap<String, Vec<String>> = HashMap::new();
@@ -27,9 +27,7 @@ pub fn add_department() {
                     Action::Display(all, _) => {
                         if action_or_dep == all {
                             show_employes(&mut company_record, action_or_dep);
-                        } else {
-                            //error in display task
-                        }
+                        } 
                     },
                     _ => ()
                 }
@@ -130,7 +128,9 @@ fn edit_employee(
 
 fn show_employes(company_record: &mut HashMap<String, Vec<String>>, action_or_dep: &str) 
 {
-    if action_or_dep == "all" {
+    if company_record.is_empty() {
+        println!("No employees/departments have been added so far.");
+    } else if action_or_dep == "all" {
         let mut sorted_dep: Vec<&str> = DEPARTMENTS.to_vec();
         sorted_dep.sort(); 
 
@@ -146,16 +146,17 @@ fn show_employes(company_record: &mut HashMap<String, Vec<String>>, action_or_de
                 println!("{}", c(employee));
             }
         }
+    } else { 
+        match company_record.get_mut(action_or_dep) {
+            Some(employees) => {
+                println!("{} Department:", c(&action_or_dep.to_string()));
 
-        if company_record.is_empty() {
-            println!("No employees/departments have been added so far.");
-        }
-    } else {
-        println!("{} Department:", c(&action_or_dep.to_string()));
-        let employees = company_record.get_mut(action_or_dep).unwrap();
-        employees.sort();
-        for employee in employees {
-            println!("{}", c(employee));
+                employees.sort();
+                for employee in employees {
+                    println!("{}", c(employee));
+                }
+            },
+            None => println!("No employees in department '{}'", action_or_dep),
         }
     }
 }
