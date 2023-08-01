@@ -5,10 +5,7 @@ const DEPARTMENTS: [&str; 4] = ["sales", "operations", "engineering", "support"]
 const EMPLOYEES: [&str; 4] = ["alice", "bob", "sally", "john"];
 
 pub fn add_department() {
-    // let departments = ["sales", "operations", "engineering", "support"];
-    // let employees = ["alice", "bob", "sally", "john"];
     let mut company_record: HashMap<String, Vec<String>> = HashMap::new();
-
     
     loop {
         let mut user_input = String::new();
@@ -42,9 +39,7 @@ pub fn add_department() {
             } else {
                 //error in task provided
             }
-        }
-
-        if !user_input.starts_with("add")  {
+        } else if !user_input.starts_with("add")  {
             if !user_input.starts_with("remove") {
                 println!("Not a valid action. Valid is either ADD or REMOVE");
                 return;
@@ -54,7 +49,6 @@ pub fn add_department() {
         
 
         for (i, c) in user_input.chars().enumerate() {
-
             if i == 3 && c == ' ' || i == 6 && c == ' ' {
                
                 let action = if i == 3 {
@@ -115,8 +109,13 @@ fn edit_employee(
             println!("{msg}");
         },
         Action::Remove => {
-            company_record.remove(&name);
+            let employees = company_record.get_mut(&department).unwrap();
+            let i_to_remove = employees.iter().position(|e| e == &name).unwrap();
+            employees.remove(i_to_remove);
+
+            // company_record.remove(&name); 
             println!("^^ Success! {} removed from {} ^^", c(&name), c(&department));
+            // println!("x****: {:?}", company_record.get(&name));
         },
         _ => (),
     }
@@ -127,6 +126,8 @@ fn show_employes(company_record: &mut HashMap<String, Vec<String>>, action_or_de
     if action_or_dep == "all" {
         let mut sorted_dep: Vec<&str> = DEPARTMENTS.to_vec();
         sorted_dep.sort(); 
+
+        println!("y #####: {:?}", company_record.get("sales"));
 
         for dep in sorted_dep {
             let employees = company_record.get(dep);
