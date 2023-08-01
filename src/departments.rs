@@ -9,7 +9,7 @@ pub fn add_department() {
     
     loop {
         let mut user_input = String::new();
-        println!("Please insert an action: [ACTION] [EMPLOYEE] to/from [DEPARTMENT]");
+        println!("Please insert an action: [ACTION] [EMPLOYEE] to/from [DEPARTMENT] or list [all](dep) (DEPARTMENT)");
 
         if let Err(_) = io::stdin().read_line(&mut user_input) {
             println!("error happened");
@@ -37,19 +37,18 @@ pub fn add_department() {
             } else if spaces == 2 && DEPARTMENTS.contains(&action_or_dep) {
                 show_employes(&mut company_record, action_or_dep);
             } else {
-                //error in task provided
+                println!("Please provide a valid action: either ALL or DEP + department");
             }
         } else if !user_input.starts_with("add")  {
             if !user_input.starts_with("remove") {
-                println!("Not a valid action. Valid is either ADD or REMOVE");
-                return;
+                println!("Not a valid action. Valid is either ADD, REMOVE or LIST");
             }
         } 
 
         
 
-        for (i, c) in user_input.chars().enumerate() {
-            if i == 3 && c == ' ' || i == 6 && c == ' ' {
+        'outter: for (i, ch) in user_input.chars().enumerate() {
+            if i == 3 && ch == ' ' || i == 6 && ch == ' ' {
                
                 let action = if i == 3 {
                     Action::Add
@@ -74,10 +73,17 @@ pub fn add_department() {
                                     &mut company_record, 
                                     &action
                                 );
+                                break 'outter;
+                            }
+                            if dep == DEPARTMENTS[DEPARTMENTS.len() - 1] {
+                                println!("No department with the name '{}' exists", c(&possible_dep.to_string()));
+                                break 'outter;
                             }
                         }
-                    }
+                    } 
                 };
+                println!("No employee with the name '{}' exists", c(&name.to_string()));
+                break 'outter;
             }
         }
     }
@@ -113,6 +119,10 @@ fn edit_employee(
             let i_to_remove = employees.iter().position(|e| e == &name).unwrap();
             employees.remove(i_to_remove);
             println!("^^ Success! {} removed from {} ^^", c(&name), c(&department));
+
+            if employees.len() == 0 {
+                company_record.remove(&department);
+            }
         },
         _ => (),
     }
@@ -124,9 +134,7 @@ fn show_employes(company_record: &mut HashMap<String, Vec<String>>, action_or_de
         let mut sorted_dep: Vec<&str> = DEPARTMENTS.to_vec();
         sorted_dep.sort(); 
 
-        println!("y #####: {:?}", company_record.get("sales"));
-
-        for dep in sorted_dep {
+        for dep in sorted_dep { 
             let employees = company_record.get(dep);
             if employees == None { 
                 continue; 
@@ -135,15 +143,19 @@ fn show_employes(company_record: &mut HashMap<String, Vec<String>>, action_or_de
             let employees = employees.unwrap();
             println!("{}:", c(&dep.to_string()));
             for employee in employees { 
-                println!("{employee}");
+                println!("{}", c(employee));
             }
+        }
+
+        if company_record.is_empty() {
+            println!("No employees/departments have been added so far.");
         }
     } else {
         println!("{} Department:", c(&action_or_dep.to_string()));
         let employees = company_record.get_mut(action_or_dep).unwrap();
         employees.sort();
         for employee in employees {
-            println!("{employee}");
+            println!("{}", c(employee));
         }
     }
 }
@@ -160,7 +172,8 @@ fn filter_whitespaces(input: &String) -> (&str, usize) {
     let mut mut_input: &str = input;
 
     loop {
-        let space_i = mut_input.find(' ').unwrap();
+        let space_i = mut_input.find(' ').unwrap_or(0);
+        if space_i == 0 { return (" ", 0); }
         mut_input = &mut_input[space_i + 1..];
         i += 1;
         if i == spaces {
