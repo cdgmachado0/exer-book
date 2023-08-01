@@ -112,10 +112,7 @@ fn edit_employee(
             let employees = company_record.get_mut(&department).unwrap();
             let i_to_remove = employees.iter().position(|e| e == &name).unwrap();
             employees.remove(i_to_remove);
-
-            // company_record.remove(&name); 
             println!("^^ Success! {} removed from {} ^^", c(&name), c(&department));
-            // println!("x****: {:?}", company_record.get(&name));
         },
         _ => (),
     }
